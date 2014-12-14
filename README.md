@@ -13,6 +13,14 @@ Modern Linux installations probably already provide the BlueZ Bluetooth stack wh
   * hcitools
   * l2ping
 
+The device and detection data are recorded in JSON so you'll need
+
+  * jshon
+
+```
+sudo apt-get install bluez jshon
+```
+
 Tested with
 ===========
 
