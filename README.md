@@ -18,7 +18,7 @@ Tested with
 
 Ubuntu 14.04 LTS
 
-Building teh test machine
+Building the test machine
 =========================
 
 Ingredients
@@ -70,4 +70,4 @@ to
 
 5 Restart the machine and install Ubuntu, deleting the entire drive
 
-
+6 Attach the Bluetooth adapter
