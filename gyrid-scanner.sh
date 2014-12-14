@@ -1,23 +1,31 @@
 #!/bin/bash
 
+clear
+
 # configure log path
 
 LOGPATH="logs"
 
-# set the log file
+# set the log files
 
 DETECTIONLOG="${LOGPATH}/`date +%Y%m%d`.detection.log"
 DEVICELOG="${LOGPATH}/`date +%Y%m%d`.device.log"
+SCRIPTLOG="${LOGPATH}/gyrid.log"
 
 # remember when the script started
 
 START=`date +%H:%M:%S`
+
+echo "GYRID Bluetooth scanner started at ${START}"
 
 # create log path if it doesn't exist
 
 if [ ! -d ${LOGPATH} ]
 then 
   mkdir ${LOGPATH}
+  echo "Log path      ${LOGPATH} created"
+else
+  echo "Log path      ${LOGPATH} exists"
 fi
 
 # create log files if they doesn't exist
@@ -25,11 +33,25 @@ fi
 if [ ! -e ${DETECTIONLOG} ]
 then
   touch ${DETECTIONLOG}
+  echo "Detection log ${DETECTIONLOG} created"
+else
+  echo "Detection log ${DETECTIONLOG} exists"
 fi
 
 if [ ! -e ${DEVICELOG} ]
 then
   touch ${DEVICELOG}
+  echo "Device log    ${DEVICELOG} created"
+else
+  echo "Device log    ${DEVICELOG} exists"
+fi
+
+if [ ! -e ${SCRIPTLOG} ]
+then
+  touch ${SCRIPTLOG}
+  echo "Script log    ${SCRIPTLOG} created"
+else
+  echo "Script log    ${SCRIPTLOG} exists"
 fi
 
 # scan
@@ -53,7 +75,7 @@ do
   echo "================================================================================="
   echo -e "Time\t\tMAC\t\t\tDevice name"
   echo "---------------------------------------------------------------------------------"
-  cat ${LOG}
+  cat ${DEVICELOG}
   echo "================================================================================="
   echo "${DETECTIONS} detections recorded in ${DETECTIONLOG}"
   echo "${DEVICES} devices recorded in ${DEVICELOG}"
@@ -61,7 +83,7 @@ do
   echo "                                                          Ctrl+C to stop scanning"
 
   # scan
-
+exit
   hcitool scan | while read DEVICE
   do
 
