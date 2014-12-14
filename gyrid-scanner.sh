@@ -106,7 +106,10 @@ do
 
       # update the devices log
 
-      echo -e "${ADDR}\t${NAME}" >> ${DEVICELOG}
+      if ! grep -q "${ADDR}" "${DEVICELOG}"
+      then 
+        echo -e "${ADDR}\t${NAME}" >> ${DEVICELOG}
+      fi
 
     fi
 
