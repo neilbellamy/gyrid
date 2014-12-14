@@ -33,6 +33,8 @@ fi
 if [ ! -e ${DETECTIONLOG} ]
 then
   touch ${DETECTIONLOG}
+  cat "{" >> ${DETECTIONLOG}
+  cat "}" >> ${DETECTIONLOG}
   echo "Detection log ${DETECTIONLOG} created" >> ${SCRIPTLOG}
 else
   echo "Detection log ${DETECTIONLOG} exists" >> ${SCRIPTLOG}
@@ -41,6 +43,8 @@ fi
 if [ ! -e ${DEVICELOG} ]
 then
   touch ${DEVICELOG}
+  cat "{" >> ${DEVICELOG}
+  cat "}" >> ${DEVICELOG}
   echo "Device log    ${DEVICELOG} created" >> ${SCRIPTLOG}
 else
   echo "Device log    ${DEVICELOG} exists" >> ${SCRIPTLOG}
@@ -54,6 +58,11 @@ else
   echo "Script log    ${SCRIPTLOG} exists" >> ${SCRIPTLOG}
 fi
 
+# set up integers
+
+declare -i DETECTIONS
+declare -i DEVICES
+
 # scan
 
 while [ 1 ] 
@@ -62,7 +71,10 @@ do
   # find out how many detections have been made so far
 
   DETECTIONS=`wc -l ${DETECTIONLOG} | awk '{print $1}'`
+  DETECTIONS=DETECTIONS-2 # do not count opening and closing braces
+
   DEVICES=`wc -l ${DEVICELOG} | awk '{print $1}'`
+  DEVICES=DEVICES-2 # do not count opening and closing braces
 
   # remember when the scan started
 
@@ -100,15 +112,15 @@ do
 
       NAME=$(echo "${DEVICE}" | sed "s/^.*${ADDR}\t//")
 
-      # update the detections log
+      # update the detections log by inserting new data before the closing bracket
 
-      echo -e "${TIME}\t${ADDR}" >> ${DETECTIONLOG}
+      sed -i '' "s/}/\"time\":\"${TIME}\":\"address\":\"${ADDR}\"\n}" ${DETECTIONLOG}
 
-      # update the devices log
+      # update the devices log by inserting new data before the closing bracket
 
       if ! grep -q "${ADDR}" "${DEVICELOG}"
       then 
-        echo -e "${ADDR}\t${NAME}" >> ${DEVICELOG}
+        sed -i '' "s/}/\"address\":\"${TIME}\":\"name\":\"${ADDR}\"\n}" ${DEVICELOG}
       fi
 
     fi
