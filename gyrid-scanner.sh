@@ -16,16 +16,16 @@ SCRIPTLOG="${LOGPATH}/gyrid.log"
 
 START=`date +%H:%M:%S`
 
-echo "GYRID Bluetooth scanner started at ${START}"
+echo "GYRID Bluetooth scanner started at ${START}" >> ${SCRIPTLOG}
 
 # create log path if it doesn't exist
 
 if [ ! -d ${LOGPATH} ]
 then 
   mkdir ${LOGPATH}
-  echo "Log path      ${LOGPATH} created"
+  echo "Log path      ${LOGPATH} created" >> ${SCRIPTLOG}
 else
-  echo "Log path      ${LOGPATH} exists"
+  echo "Log path      ${LOGPATH} exists" >> ${SCRIPTLOG}
 fi
 
 # create log files if they doesn't exist
@@ -33,25 +33,25 @@ fi
 if [ ! -e ${DETECTIONLOG} ]
 then
   touch ${DETECTIONLOG}
-  echo "Detection log ${DETECTIONLOG} created"
+  echo "Detection log ${DETECTIONLOG} created" >> ${SCRIPTLOG}
 else
-  echo "Detection log ${DETECTIONLOG} exists"
+  echo "Detection log ${DETECTIONLOG} exists" >> ${SCRIPTLOG}
 fi
 
 if [ ! -e ${DEVICELOG} ]
 then
   touch ${DEVICELOG}
-  echo "Device log    ${DEVICELOG} created"
+  echo "Device log    ${DEVICELOG} created" >> ${SCRIPTLOG}
 else
-  echo "Device log    ${DEVICELOG} exists"
+  echo "Device log    ${DEVICELOG} exists" >> ${SCRIPTLOG}
 fi
 
 if [ ! -e ${SCRIPTLOG} ]
 then
   touch ${SCRIPTLOG}
-  echo "Script log    ${SCRIPTLOG} created"
+  echo "Script log    ${SCRIPTLOG} created" >> ${SCRIPTLOG}
 else
-  echo "Script log    ${SCRIPTLOG} exists"
+  echo "Script log    ${SCRIPTLOG} exists" >> ${SCRIPTLOG}
 fi
 
 # scan
@@ -83,7 +83,7 @@ do
   echo "                                                          Ctrl+C to stop scanning"
 
   # scan
-exit
+
   hcitool scan | while read DEVICE
   do
 
