@@ -16,16 +16,16 @@ SCRIPTLOG="${LOGPATH}/gyrid.log"
 
 START=`date +%H:%M:%S`
 
-echo "GYRID Bluetooth scanner started at ${START}" >> ${SCRIPTLOG}
+echo "${START} GYRID Bluetooth scanner started" >> ${SCRIPTLOG}
 
 # create log path if it doesn't exist
 
 if [ ! -d ${LOGPATH} ]
 then 
   mkdir ${LOGPATH}
-  echo "Log path      ${LOGPATH} created" >> ${SCRIPTLOG}
+  echo "${START} Log path ${LOGPATH} created" >> ${SCRIPTLOG}
 else
-  echo "Log path      ${LOGPATH} exists" >> ${SCRIPTLOG}
+  echo "${START} Log path ${LOGPATH} exists" >> ${SCRIPTLOG}
 fi
 
 # create log files if they doesn't exist
@@ -33,29 +33,27 @@ fi
 if [ ! -e ${DETECTIONLOG} ]
 then
   touch ${DETECTIONLOG}
-  cat "{" >> ${DETECTIONLOG}
-  cat "}" >> ${DETECTIONLOG}
-  echo "Detection log ${DETECTIONLOG} created" >> ${SCRIPTLOG}
+  echo -e "[\n]" >> ${DETECTIONLOG}
+  echo "${START} Detection log ${DETECTIONLOG} created" >> ${SCRIPTLOG}
 else
-  echo "Detection log ${DETECTIONLOG} exists" >> ${SCRIPTLOG}
+  echo "${START} Detection log ${DETECTIONLOG} exists" >> ${SCRIPTLOG}
 fi
 
 if [ ! -e ${DEVICELOG} ]
 then
   touch ${DEVICELOG}
-  cat "{" >> ${DEVICELOG}
-  cat "}" >> ${DEVICELOG}
-  echo "Device log    ${DEVICELOG} created" >> ${SCRIPTLOG}
+  echo -e "[\n]" >> ${DEVICELOG}
+  echo "${START} Device log ${DEVICELOG} created" >> ${SCRIPTLOG}
 else
-  echo "Device log    ${DEVICELOG} exists" >> ${SCRIPTLOG}
+  echo "${START} Device log ${DEVICELOG} exists" >> ${SCRIPTLOG}
 fi
 
 if [ ! -e ${SCRIPTLOG} ]
 then
   touch ${SCRIPTLOG}
-  echo "Script log    ${SCRIPTLOG} created" >> ${SCRIPTLOG}
+  echo "${START} Script log ${SCRIPTLOG} created" >> ${SCRIPTLOG}
 else
-  echo "Script log    ${SCRIPTLOG} exists" >> ${SCRIPTLOG}
+  echo "${START} Script log ${SCRIPTLOG} exists" >> ${SCRIPTLOG}
 fi
 
 # set up integers
@@ -79,6 +77,9 @@ do
   # remember when the scan started
 
   TIME=`date +%H:%M:%S`
+
+  echo "${TIME} Scan started" >> ${SCRIPTLOG}
+  echo "${TIME} ${DEVICES} devices in ${DETECTIONS} detections" >> ${SCRIPTLOG}
 
   # update the screen
 
@@ -112,15 +113,19 @@ do
 
       NAME=$(echo "${DEVICE}" | sed "s/^.*${ADDR}\t//")
 
+      echo "${TIME} Device ${ADDR} detected with name ${NAME}" >> ${SCRIPTLOG}
+
       # update the detections log by inserting new data before the closing bracket
 
-      sed -i '' "s/}/\"time\":\"${TIME}\":\"address\":\"${ADDR}\"\n}" ${DETECTIONLOG}
+      sed -i "s/\]$/,{\"time\":\"${TIME}\",\"address\":\"${ADDR}\"}\n\]/" ${DETECTIONLOG}
+      sed -i "2s/,{/{/" ${DETECTIONLOG}
 
       # update the devices log by inserting new data before the closing bracket
 
       if ! grep -q "${ADDR}" "${DEVICELOG}"
       then 
-        sed -i '' "s/}/\"address\":\"${TIME}\":\"name\":\"${ADDR}\"\n}" ${DEVICELOG}
+        sed -i "s/\]$/,{\"address\":\"${TIME}\":\"name\":\"${ADDR}\"}\n\]/" ${DEVICELOG}
+        sed -i "s/,{/{/" ${DEVICELOG}
       fi
 
     fi
