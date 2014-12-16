@@ -117,15 +117,15 @@ do
 
       # update the detections log by inserting new data before the closing bracket
 
-      sed -i "s/\]$/,{\"time\":\"${TIME}\",\"address\":\"${ADDR}\"}\n\]/" ${DETECTIONLOG}
-      sed -i "2s/,{/{/" ${DETECTIONLOG}
+      sed -i "s/\]$/  {\"time\":\"${TIME}\",\"address\":\"${ADDR}\"},\n\]/" ${DETECTIONLOG}
+      sed -i "-2s/},$/}/" ${DETECTIONLOG}
 
       # update the devices log by inserting new data before the closing bracket
 
       if ! grep -q "${ADDR}" "${DEVICELOG}"
       then 
-        sed -i "s/\]$/,{\"address\":\"${TIME}\":\"name\":\"${ADDR}\"}\n\]/" ${DEVICELOG}
-        sed -i "s/,{/{/" ${DEVICELOG}
+        sed -i "s/\]$/  {\"address\":\"${TIME}\",\"name\":\"${ADDR}\"},\n\]/" ${DEVICELOG}
+        sed -i "-2s/},$/}/" ${DEVICELOG}
       fi
 
     fi
