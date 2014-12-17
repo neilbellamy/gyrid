@@ -10,13 +10,13 @@ LOGPATH="/var/log/gyrid"
 
 # files are named using the date at run time
 
-DETECTIONLOG="${LOGPATH}/`date +%Y%m%d`.detection.log"
-DEVICELOG="${LOGPATH}/`date +%Y%m%d`.device.log"
+DETECTIONLOG="${LOGPATH}/detection.log"
+DEVICELOG="${LOGPATH}/device.log"
 SCRIPTLOG="${LOGPATH}/gyrid.log"
 
 # remember when the script started
 
-START=`date +%H:%M:%S`
+START=`date +%Y-%m-%d %H:%M:%S`
 
 echo "${START} GYRID Bluetooth scanner started" >> ${SCRIPTLOG}
 
@@ -74,7 +74,7 @@ do
 
   # remember when the scan started
 
-  TIME=`date +%H:%M:%S`
+  TIME=`date +%Y-%m-%d %H:%M:%S`
 
 #  echo "${TIME} Scan started" >> ${SCRIPTLOG}
 #  echo "${TIME} ${DEVICES} devices in ${DETECTIONS} detections" >> ${SCRIPTLOG}
