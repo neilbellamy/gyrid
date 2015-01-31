@@ -79,3 +79,18 @@ to
 5 Restart the machine and install Ubuntu, deleting the entire drive
 
 6 Attach the Bluetooth adapter
+
+Second generation - Microprocessor
+==================================
+
+ - Raspberry Pi B+
+ - Class 1  Bluetooth USB adapter
+ 
+Installed Rasbian
+
+Connect to network, SSH in and
+
+```
+$ sudo apt-get update
+$ sudo apt-get upgrade
+```
