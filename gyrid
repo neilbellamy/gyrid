@@ -1,6 +1,20 @@
 #!/bin/bash
 
-clear
+# set up integers
+
+declare -i DETECTIONS
+declare -i DEVICES
+declare -i MAXSCANS
+declare -i SCAN
+
+DETECTIONS=0
+DEVICES=0
+MAXSCANS=10
+SCAN=0
+
+# output to screen
+
+SCREEN=false
 
 # configure log path
 
@@ -21,7 +35,7 @@ START=`date +%Y-%m-%d\ %H:%M:%S`
 # create log path if it doesn't exist
 
 if [ ! -d ${LOGPATH} ]
-then 
+then
   mkdir ${LOGPATH}
 fi
 
@@ -51,14 +65,10 @@ fi
 
 echo "${START} GYRID Bluetooth scanner started" >> ${SCRIPTLOG}
 
-# set up integers
-
-declare -i DETECTIONS
-declare -i DEVICES
-
 # scan
 
-while [ 1 ] 
+#while [ ${SCAN} -lt ${MAXSCANS} ]
+while [ 1 ]
 do
 
   # find out how many detections have been made so far
@@ -67,23 +77,38 @@ do
 
   DEVICES=`wc -l ${DEVICELOG} | awk '{print $1}'`
 
+  SCAN=$((SCAN + 1))
+
   # remember when the scan started
 
   TIME=`date +%Y-%m-%d\ %H:%M:%S`
 
   # update the screen
 
-  clear
-  echo "                                                                BLUETOOTH SCANNER"
-  echo "================================================================================="
-  echo "${DETECTIONS} detections recorded in ${DETECTIONLOG}"
-  echo "${DEVICES} devices recorded in ${DEVICELOG}"
-  echo "Scanning every 10s since ${START}, last scan at ${TIME}"
-  echo "                                                          Ctrl+C to stop scanning"
+  if [ ${SCREEN} = true ]
+  then
+
+    clear
+
+    echo "                                                                BLUETOOTH SCANNER"
+    echo "================================================================================="
+    echo "Detection log   ${DETECTIONLOG}"
+    echo "Device log      ${DEVICELOG}"
+    echo "Scan interval   10s"
+    echo "Maximum scans   ${MAXSCANS}"
+    echo "Scanner started ${START}"
+    echo "---------------------------------------------------------------------------------"
+    echo "Scan            ${SCAN}"
+    echo "Started at      ${TIME}"
+    echo "Devices         ${DEVICES}"
+    echo "Detections      ${DETECTIONS}"
+    echo "                                                          Ctrl+C to stop scanning"
+
+  fi
 
   # scan
 
-  hcitool scan | while read DEVICE
+  while read DEVICE
   do
 
     # ignore the first line of hcitool's output
@@ -108,14 +133,16 @@ do
       # update the devices log if this is a new device
 
       if ! grep -q "${ADDR}" "${DEVICELOG}"
-      then 
+      then
 
         echo "${ADDR},${NAME}" >> ${DEVICELOG}
-      
+
       fi
 
     fi # end of hcitool output loop
 
-  done # end of scan
+  done <<< "`hcitool scan --flush`" # end of scan
 
 done
+
+exit 0
