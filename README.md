@@ -93,4 +93,6 @@ Connect to network, SSH in and
 ```
 $ sudo apt-get update
 $ sudo apt-get upgrade
+$ sudo mkdir /var/log/gyrid
+$ sudo chown -R pi:pi /var/log/gyrid
 ```
